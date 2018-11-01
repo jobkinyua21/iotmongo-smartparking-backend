@@ -1,8 +1,15 @@
 var express = require('express');
 var router = express.Router();
 
-router.get('/', function(req, res, next) {
-  res.render('parkingLot', { title: 'Parking Lot Example'})
-});
+module.exports = function(io) {
+  router.get('/', function(req, res, next) {
+    res.render('parkingLot', { title: 'Parking Lot Example' })
+  });
 
-module.exports = router;
+  io.on('connection', (socket) => {
+    console.log('A User has Connected!')
+  })
+
+  return router
+
+}

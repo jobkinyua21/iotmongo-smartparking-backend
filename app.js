@@ -3,8 +3,14 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const Server = require('socket.io');
+const io = new Server()
+const mongoose = require('mongoose')
+const parkingLotRouter = require('./routes/parkingLot')(io)
 
-const parkingLotRouter = require('./routes/parkingLot');
+
+mongoose.connect('mongodb://localhost/parking-lot-example', { useNewUrlParser: true})
+mongoose.Promise = Promise
 
 const app = express();
 
@@ -17,8 +23,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
-app.use('/parkingLot', parkingLotRouter);
+app.use('/parking_lot', parkingLotRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -36,4 +41,6 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+io.serveClient(false)
+
+module.exports = { app, io };
