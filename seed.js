@@ -15,6 +15,7 @@ ParkingLot.deleteMany({}).exec()
       name: 'C1',
       status: 'vacant'
     })
+    .save()
   )
   .then(res => {
     console.log('Created Record: ' + res)
