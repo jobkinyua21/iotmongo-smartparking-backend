@@ -7,9 +7,9 @@ module.exports = function(io) {
   router.put('/', function(req, res, next) {
     const status = req.body.status || 'vacant'
 
-    ParkingLot.updateOne({ name: 'C1' }, { $set: { status: status} })
+    ParkingLot.updateOne({ name: 'slot1' }, { $set: { status: status} })
       .exec()
-      .then(() => ParkingLot.findOne({name: 'C1'}).exec())
+      .then(() => ParkingLot.findOne({name: 'slot1'}).exec())
       .then(result => {
         io.emit('status-changed',result)
         res.status(200).json(result)

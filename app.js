@@ -8,7 +8,7 @@ const Server = require('socket.io');
 const io = new Server()
 
 io.on('connection', (socket) => {
-  console.log('A User has connected!')
+console.log('A User has connected!')
 })
 
 const mongoose = require('mongoose')
@@ -16,7 +16,18 @@ const mongoose = require('mongoose')
 const parkingLotRouter = require('./routes/parkingLot')
 const parkingLotApiRouter = require('./routes/api/parkingLot')(io)
 
-mongoose.connect('mongodb://localhost/parking-lot-example', { useNewUrlParser: true})
+mongoose.connect(
+`mongodb+srv://root:admin@cluster0.mkpfl.mongodb.net/smrtprk?retryWrites=true&w=majority`,
+
+{
+    useNewUrlParser: true, 
+    useUnifiedTopology: true,
+    useCreateIndex:true 
+}
+).then(()=>{
+console.log('Database connected');
+});
+
 mongoose.Promise = Promise
 
 const app = express();
@@ -35,18 +46,18 @@ app.use('/api/parking_lot', parkingLotApiRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  next(createError(404));
+next(createError(404));
 });
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+// set locals, only providing error in development
+res.locals.message = err.message;
+res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+// render the error page
+res.status(err.status || 500);
+res.render('error');
 });
 
 io.serveClient(false)
